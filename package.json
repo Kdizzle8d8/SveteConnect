@@ -39,6 +39,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-vercel": "^5.3.1",
 		"bits-ui": "^0.21.10",
 		"browser": "^0.2.6",
 		"clsx": "^2.1.1",

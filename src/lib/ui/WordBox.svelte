@@ -16,16 +16,16 @@
 		}
 	});
 	let fontSize = $derived.by(() => {
-		return word.word.length >= 8 ? 'text-[0.65rem]' : 'text-sm';
+		return word.word.length >= 7 ? 'text-[0.65rem]' : 'text-sm';
 	});
-	
 </script>
+
 <button
-	class="flex flex-1 flex-wrap place-content-center text-wrap transition-all {select} h-20 rounded-sm font-bold shadow-md whitespace-normal"
+	class="flex flex-1 flex-wrap place-content-center text-wrap transition-all {select} h-20 whitespace-normal rounded-sm font-bold shadow-md"
 	disabled={!isClickable}
 	onclick={() => {
 		word.selected = !word.selected;
 	}}
 >
-<p class="  max-w-[90%] break-words hyphens-auto {fontSize}   ">{word.word}</p>
+	<p class="  max-w-[90%] hyphens-auto break-words {fontSize}   ">{word.word}</p>
 </button>

@@ -9,11 +9,12 @@
 	import { getContext, onMount, setContext } from 'svelte';
 	import { Puzzle, Word } from './puzzle.svelte';
 	import { info } from '../info';
-	const {data }=$props();
+	import WrongBox from '$lib/ui/WrongBox.svelte';
+	const { data } = $props();
 	const puzzle = new Puzzle(data as Puzzle);
 	let loading = $state(false);
 	puzzle.shuffle();
-		$info = `Puzzle For: ${puzzle.title}` 
+	$info = `Puzzle For: ${puzzle.title}`;
 
 	let guesses = $state(4);
 
@@ -21,12 +22,16 @@
 	let full = $derived(selected.length >= 4);
 	let finished = $derived(puzzle.groups.filter(group => group.answered).length == 4);
 	let failed = $derived(guesses == 0);
+	let lastGuess = $state();
 	// let finished = true;
 	const submit = () => {
 		console.log(guesses);
 		if (full) {
 			const res = checkAnswers();
-			if (res?.selected.length == 4) {
+			if (lastGuess === res) {
+				createToast('same');
+				return;
+			} else if (res?.selected.length == 4) {
 				console.log(res);
 				createToast('correct');
 				res.group.answered = true;
@@ -50,10 +55,12 @@
 				createToast('wrong');
 				guesses--;
 			}
+
+			lastGuess = res;
 		}
 	};
 	const refresh = () => {
-		console.log("asdasd")	
+		console.log('asdasd');
 	};
 
 	const checkAnswers = () => {
@@ -67,11 +74,11 @@
 
 	let answered = $derived(puzzle.groups.filter(group => group.answered));
 	let toast = $state(false);
-	let variant = $state('wrong');
+	let kind = $state('wrong');
 
-	const createToast = (kind: string) => {
+	const createToast = (variant: string) => {
 		toast = true;
-		variant = kind;
+		kind = variant;
 		setTimeout(() => {
 			toast = false;
 		}, 1500);
@@ -79,13 +86,13 @@
 </script>
 
 {#if toast}
-	<Notif {variant} />
+	<Notif {kind} />
 {/if}
 <div class="flex h-max flex-1 flex-col">
 	<div class="m-2 place-content-center">
 		{#if !loading}
-			<div class=" mt-10  grid grid-cols-4 grid-rows-5 gap-3">
-					{#if finished}
+			<div class=" mt-10 grid grid-cols-4 grid-rows-5 gap-3">
+				{#if finished}
 					<h1 class="col-span-4 mb-10 w-full text-center text-2xl font-bold">
 						{#if failed}
 							Failed
@@ -95,6 +102,7 @@
 					</h1>
 				{:else}
 					<h1 class="col-span-4 mb-10 w-full text-center text-2xl font-bold">&nbsp;</h1>
+					<!-- <WrongBox /> -->
 				{/if}
 				{#each answered as group}
 					<GroupBox {group} />
@@ -102,7 +110,6 @@
 				{#each puzzle.words as word}
 					<WordBox clickable={!full} {word} />
 				{/each}
-			
 			</div>
 			<div class="flex w-full flex-col place-items-center">
 				<div class=" mt-10 flex flex-col place-items-center">
@@ -113,7 +120,7 @@
 						{/each}
 					</div>
 				</div>
-				<div class=" mt-3 grid w-[70%] grid-flow-row grid-cols-2  place-items-center gap-4 border-2 p-2">
+				<div class=" mt-3 grid w-[70%] grid-flow-row grid-cols-2 place-items-center gap-4 border-2 p-2">
 					<Button disabled={!full} class="animate-duration-1000 animate-fill-both animate-bounce disabled:animate-none" onclick={submit}>Submit<ForwardIcon class="ml-2 size-4" /></Button>
 					<Button
 						variant="outline"

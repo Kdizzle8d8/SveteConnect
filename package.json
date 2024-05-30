@@ -40,6 +40,7 @@
 	"type": "module",
 	"dependencies": {
 		"bits-ui": "^0.21.10",
+		"browser": "^0.2.6",
 		"clsx": "^2.1.1",
 		"lucide-svelte": "^0.379.0",
 		"mode-watcher": "^0.3.0",

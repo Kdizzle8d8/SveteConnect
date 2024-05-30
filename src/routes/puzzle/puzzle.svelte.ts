@@ -10,20 +10,25 @@ export interface Group {
 export class Word {
 	word: string;
 	selected = $state<boolean>(false);
-	constructor(word: string) {
-		this.word = word;
+	constructor(word?: string, obj?: Word) {
+		if (obj) {
+			Object.assign(this, obj);
+		} else {
+			this.word = word || '';
+		}
 	}
 }
 // Puzzle class
 export class Puzzle {
 	groups = $state<Group[]>([]);
-	title: string;
+	// groups: Group[] = [];
+	title?: string;
 	words = $state<Word[]>([]);
+	// words: Word[] = [];
 
-	constructor(title: string, groups: Group[]) {
-		this.title = title;
-		this.groups = groups;
-		this.words = this.getWords();
+	constructor(obj: any) {
+		Object.assign(this, obj);
+		this.words=this.getWords();
 	}
 
 	getWords(): Word[] {
@@ -43,6 +48,9 @@ export class Puzzle {
 		for (const word of this.words) {
 			word.selected = false;
 		}
+	}
+	cachePuzzle() {
+		localStorage.setItem('puzzle', JSON.stringify(this));
 	}
 
 	shuffle() {

@@ -6,43 +6,16 @@
 	import Notif from '$lib/ui/Notif.svelte';
 	import WordBox from '$lib/ui/WordBox.svelte';
 	import { ForwardIcon, Loader, Plus, ShuffleIcon } from 'lucide-svelte';
-	import { onMount } from 'svelte';
+	import { getContext, onMount, setContext } from 'svelte';
 	import { Puzzle, Word } from './puzzle.svelte';
-	import { makePuzzle } from './puzzleCreate.svelte';
-	let puzzle: Puzzle = $state(
-		new Puzzle('Example Puzzle', [
-			{
-				words: [new Word('apple'), new Word('banana'), new Word('cherry'), new Word('date')],
-				title: 'Group 1',
-				difficulty: 1,
-				answered: false
-			},
-			{
-				words: [new Word('elephant'), new Word('flamingo'), new Word('giraffe'), new Word('hippo')],
-				title: 'Group 2',
-				difficulty: 2,
-				answered: false
-			},
-			{
-				words: [new Word('iguana'), new Word('jaguar'), new Word('koala'), new Word('lemur')],
-				title: 'Group 3',
-				difficulty: 3,
-				answered: false
-			},
-			{
-				words: [new Word('monkey'), new Word('narwhal'), new Word('octopus'), new Word('penguin')],
-				title: 'Group 4',
-				difficulty: 4,
-				answered: false
-			}
-		])
-	);
+	import { info } from '../info';
+	const {data }=$props();
+	const puzzle = new Puzzle(data as Puzzle);
 	let loading = $state(false);
+	puzzle.shuffle();
+		$info = `Puzzle For: ${puzzle.title}` 
 
-	onMount(() => {
-		puzzle.shuffle();
-	});
-	let guesses = $state(2);
+	let guesses = $state(4);
 
 	let selected = $derived(puzzle.words.filter(word => word.selected));
 	let full = $derived(selected.length >= 4);
@@ -80,12 +53,7 @@
 		}
 	};
 	const refresh = () => {
-		loading = true;
-		makePuzzle().then(res => {
-			puzzle = res;
-			puzzle.shuffle();
-			loading = false;
-		});
+		console.log("asdasd")	
 	};
 
 	const checkAnswers = () => {
@@ -113,11 +81,11 @@
 {#if toast}
 	<Notif {variant} />
 {/if}
-<div class="flex h-full flex-1 flex-col">
+<div class="flex h-max flex-1 flex-col">
 	<div class="m-2 place-content-center">
 		{#if !loading}
-			<div class=" mt-32 grid grid-cols-4 grid-rows-5 gap-4">
-				{#if finished}
+			<div class=" mt-10  grid grid-cols-4 grid-rows-5 gap-3">
+					{#if finished}
 					<h1 class="col-span-4 mb-10 w-full text-center text-2xl font-bold">
 						{#if failed}
 							Failed
@@ -134,6 +102,7 @@
 				{#each puzzle.words as word}
 					<WordBox clickable={!full} {word} />
 				{/each}
+			
 			</div>
 			<div class="flex w-full flex-col place-items-center">
 				<div class=" mt-10 flex flex-col place-items-center">
@@ -144,7 +113,7 @@
 						{/each}
 					</div>
 				</div>
-				<div class=" mt-3 grid w-[70%] grid-flow-row grid-cols-2 grid-rows-2 place-items-center gap-4 border-2 p-2">
+				<div class=" mt-3 grid w-[70%] grid-flow-row grid-cols-2  place-items-center gap-4 border-2 p-2">
 					<Button disabled={!full} class="animate-duration-1000 animate-fill-both animate-bounce disabled:animate-none" onclick={submit}>Submit<ForwardIcon class="ml-2 size-4" /></Button>
 					<Button
 						variant="outline"
@@ -156,9 +125,9 @@
 					>
 						Shuffle<ShuffleIcon class="ml-2 size-4" /></Button
 					>
-					<Button onclick={refresh} class="col-span-2 bg-green-400">
+					<!-- <Button onclick={refresh} class="col-span-2 bg-green-400">
 						New Puzzle<Plus class="  ml-2 size-4" /></Button
-					>
+					> -->
 				</div>
 			</div>
 		{:else}

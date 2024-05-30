@@ -15,14 +15,17 @@
 			isClickable = true;
 		}
 	});
+	let fontSize = $derived.by(() => {
+		return word.word.length >= 8 ? 'text-[0.65rem]' : 'text-sm';
+	});
+	
 </script>
-
 <button
-	class=" flex flex-1 flex-wrap place-content-center text-wrap transition-all {select} h-20 rounded-md font-bold shadow-lg"
+	class="flex flex-1 flex-wrap place-content-center text-wrap transition-all {select} h-20 rounded-sm font-bold shadow-md whitespace-normal"
 	disabled={!isClickable}
 	onclick={() => {
 		word.selected = !word.selected;
 	}}
 >
-	{word.word}
+<p class="  max-w-[90%] break-words hyphens-auto {fontSize}   ">{word.word}</p>
 </button>

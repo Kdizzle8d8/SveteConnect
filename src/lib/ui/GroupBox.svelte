@@ -7,7 +7,7 @@
 	});
 </script>
 
-<div class=" animate-flip-up animate-once animate-duration-[600ms] animate-ease-linear animate-fill-both col-span-4 flex h-full flex-col items-center rounded-2xl py-2 {color} ">
+<div class=" animate-flip-up animate-once animate-duration-[600ms] animate-ease-linear animate-fill-both col-span-4 flex h-full flex-col items-center rounded-sm py-2 {color} ">
 	<h1 class="text-xl font-bold">{group.title}</h1>
 	<h2 class="text-center font-semibold">
 		{#each group.words as word}
